@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kwikwi/globals/global_constants.dart';
 
 import '../../controllers/home_main_controller.dart';
 
@@ -64,11 +65,12 @@ class _HomeSideBarState extends State<HomeSideBar> with SingleTickerProviderStat
             width: Get.width * 0.05 + (Get.width * 0.15* value),
             padding: const EdgeInsets.symmetric(vertical: 20),
             height: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
+            decoration:const BoxDecoration(
+              color: GlobalConstants.mainColor,
               border: Border(
                 right: BorderSide(
-                  color: Colors.grey.withOpacity(0.2)
+                  color: GlobalConstants.borderColor,
+                  width: GlobalConstants.borderWidth
                 )
               )
             ),
@@ -90,7 +92,7 @@ class _HomeSideBarState extends State<HomeSideBar> with SingleTickerProviderStat
             width: double.infinity,
             alignment: Alignment.center,
             height: Get.height * 0.05,
-            child: Text('Kwi')
+            child: Text('Kwi',style: TextStyle(color:GlobalConstants.textColor),)
           ),
         ),
         const Divider(),
@@ -116,7 +118,7 @@ class _HomeSideBarState extends State<HomeSideBar> with SingleTickerProviderStat
               width: double.infinity,
               alignment: Alignment.center,
               height: Get.height * 0.05,
-              child: Text('Kwi Kwi')
+              child:const Text('Kwi Kwi',style: TextStyle(color: GlobalConstants.textColor),)
           ),
         ),
         Container(

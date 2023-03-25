@@ -7,8 +7,6 @@ import 'package:kwikwi/services/network_call_services.dart';
 enum PageTab {
   body,
   header,
-  response,
-  all
 }
 
 class FreeCallController extends GetxController{
