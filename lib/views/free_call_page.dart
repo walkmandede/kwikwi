@@ -184,17 +184,20 @@ class FreeCallPage extends StatelessWidget {
     }
 
     return Container(
+      width: double.maxFinite,
+        height: double.maxFinite,
         margin: const EdgeInsets.symmetric(vertical: 20),
-        padding:const EdgeInsets.all(15),
+        padding:const EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
             color: GlobalConstants.mainColor,
             border: Border.all(color: GlobalConstants.borderColor,width: 2),
             borderRadius: BorderRadius.circular(GlobalConstants.borderRadius)
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             pageTapPanel(),
-            widget,
+            // widget,
           ],
         )
     );
@@ -202,15 +205,25 @@ class FreeCallPage extends StatelessWidget {
 
   Widget pageTapPanel(){
     return GetBuilder<FreeCallController>(
-      builder:(controller)=> Row(
-        mainAxisSize: MainAxisSize.min,
-        children:PageTab.values.map((e) => Container(
-          padding:const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-          decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color:controller.pageTab==e?GlobalConstants.hightLightColor:Colors.transparent,width: 2.5))
+      builder:(controller)=> Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children:PageTab.values.map((e) =>
+              GestureDetector(
+                onTap: (){
+                  controller.pageTab = e;
+                  controller.update();
+                },
+                child: Container(
+            padding:const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color:controller.pageTab==e?GlobalConstants.hightLightColor:Colors.transparent,width: 2.5))
+            ),
+            child: Text(e.name.toUpperCase(),style:const TextStyle(color: GlobalConstants.textColor),),
           ),
-          child: Text(e.name.toUpperCase()),
-        )).toList()
+              )).toList()
+        ),
       ),
     );
   }
@@ -245,7 +258,6 @@ class FreeCallPage extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-
         child: JsonEditor.string(
           jsonString: "",
           enabled: true,
