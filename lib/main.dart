@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kwikwi/views/free_call_page.dart';
+import 'package:kwikwi/views/home_main_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const FreeCallPage(),
+      home: const HomeMainPage(),
     );
   }
 }
