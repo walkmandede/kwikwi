@@ -186,8 +186,7 @@ class FreeCallPage extends StatelessWidget {
     return Container(
       width: double.maxFinite,
         height: double.maxFinite,
-        margin: const EdgeInsets.symmetric(vertical: 20),
-        padding:const EdgeInsets.only(bottom: 15),
+        margin: const EdgeInsets.only(top: 20),
         decoration: BoxDecoration(
             color: GlobalConstants.mainColor,
             border: Border.all(color: GlobalConstants.borderColor,width: 2),
