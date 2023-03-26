@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
 import 'package:json_editor/json_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kwikwi/controllers/free_call_controller.dart';
 import 'package:kwikwi/globals/global_constants.dart';
-
 import '../models/kwikwi_request.dart';
 
 class FreeCallPage extends StatelessWidget {
@@ -25,6 +25,7 @@ class FreeCallPage extends StatelessWidget {
                 children: [
                   topPanel(),
                   Expanded(child: midPanel()),
+                  Expanded(child: responsePanel())
                   // bottomPanel(),
                 ],
               );
@@ -100,12 +101,27 @@ class FreeCallPage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 15,),
-          IconButton(
-            padding: EdgeInsets.zero,
-              onPressed: ()async{
-                await freeCallController.onClickSubmit();
-              },
-              icon:const Icon(Icons.send_rounded,color: GlobalConstants.iconColor,))
+          GestureDetector(
+            onTap: ()async{
+                    await freeCallController.onClickSubmit();
+            },
+            child: Container(
+                height: 40,
+                padding:const EdgeInsets.symmetric(horizontal: 15,),
+                decoration: BoxDecoration(
+                    border: Border.all(color:GlobalConstants.secondaryBorderColor),
+                    borderRadius: BorderRadius.circular(4)
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children:const [
+                    Text('Send',style: TextStyle(color: GlobalConstants.textColor),),
+                    SizedBox(width: 10,),
+                     Icon(Icons.send_rounded,color: GlobalConstants.iconColor,size: 18,)
+                  ],
+                )
+            ),
+          ),
         ],
       ),
     );
@@ -173,13 +189,13 @@ class FreeCallPage extends StatelessWidget {
 
   Widget midPanel() {
     FreeCallController freeCallController = Get.find();
-    Widget widget = Container();
+    Widget shownWidget = Container();
     switch (freeCallController.pageTab) {
       case PageTab.body:
-        widget = bodyPanel();
+        shownWidget = bodyPanel();
         break;
       case PageTab.header:
-        widget = headerPanel();
+        shownWidget = headerPanel();
         break;
     }
 
@@ -187,6 +203,7 @@ class FreeCallPage extends StatelessWidget {
       width: double.maxFinite,
         height: double.maxFinite,
         margin: const EdgeInsets.only(top: 20),
+        padding:const EdgeInsets.all(15),
         decoration: BoxDecoration(
             color: GlobalConstants.mainColor,
             border: Border.all(color: GlobalConstants.borderColor,width: 2),
@@ -196,7 +213,18 @@ class FreeCallPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             pageTapPanel(),
-            // widget,
+            Expanded(
+                child: Container(
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  margin:const EdgeInsets.only(top: 10),
+                  decoration: BoxDecoration(
+                    color: GlobalConstants.bgColor,
+                      borderRadius: BorderRadius.circular(GlobalConstants.borderRadius)
+                  ),
+                  child: shownWidget,
+                )
+            ),
           ],
         )
     );
@@ -204,25 +232,22 @@ class FreeCallPage extends StatelessWidget {
 
   Widget pageTapPanel(){
     return GetBuilder<FreeCallController>(
-      builder:(controller)=> Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children:PageTab.values.map((e) =>
-              GestureDetector(
-                onTap: (){
-                  controller.pageTab = e;
-                  controller.update();
-                },
-                child: Container(
-            padding:const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-            decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color:controller.pageTab==e?GlobalConstants.hightLightColor:Colors.transparent,width: 2.5))
-            ),
-            child: Text(e.name.toUpperCase(),style:const TextStyle(color: GlobalConstants.textColor),),
+      builder:(controller)=> Row(
+        mainAxisSize: MainAxisSize.min,
+        children:PageTab.values.map((e) =>
+            GestureDetector(
+              onTap: (){
+                controller.pageTab = e;
+                controller.update();
+              },
+              child: Container(
+          padding:const EdgeInsets.only(left: 20,right: 20, bottom: 10),
+          decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color:controller.pageTab==e?GlobalConstants.hightLightColor:Colors.transparent,width: 2.5))
           ),
-              )).toList()
+          child: Text(e.name.toUpperCase(),style:const TextStyle(color: GlobalConstants.textColor),),
         ),
+            )).toList()
       ),
     );
   }
@@ -252,53 +277,110 @@ class FreeCallPage extends StatelessWidget {
   }
 
   Widget bodyPanel() {
-    FreeCallController freeCallController = Get.find();
-    return Container(
-        width: double.infinity,
-        height: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: JsonEditor.string(
-          jsonString: "",
-          enabled: true,
-          onValueChanged: (value) {
-            freeCallController.kwiKwiRequest.body = value.toJson();
-            freeCallController.update();
-          },
-        )
+    return GetBuilder<FreeCallController>(
+      builder:(freeCallController)=> Container(
+          width: double.maxFinite,
+          height: double.maxFinite,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: JsonEditorTheme(
+            themeData: JsonEditorThemeData(
+              darkTheme: JsonTheme(
+                bracketStyle:const TextStyle(color: GlobalConstants.textColor),
+              ),
+              lightTheme: JsonTheme(
+                  bracketStyle:const TextStyle(color: GlobalConstants.textColor),
+              ),
+            ),
+            child: JsonEditor.string(
+              jsonString: "",
+              enabled: true,
+              onValueChanged: (value) {
+                freeCallController.kwiKwiRequest.body = value.toJson();
+                freeCallController.update();
+              },
+            ),
+          )
+      ),
     );
   }
 
   Widget headerPanel() {
-    return Container();
+    return GetBuilder<FreeCallController>(
+      builder:(freeCallController)=> Container(
+          width: double.maxFinite,
+          height: double.maxFinite,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: JsonEditorTheme(
+            themeData: JsonEditorThemeData(
+              darkTheme: JsonTheme(
+                bracketStyle:const TextStyle(color: GlobalConstants.textColor),
+              ),
+              lightTheme: JsonTheme(
+                bracketStyle:const TextStyle(color: GlobalConstants.textColor),
+              ),
+            ),
+            child: JsonEditor.string(
+              jsonString: "",
+              enabled: true,
+              onValueChanged: (value) {
+                freeCallController.kwiKwiRequest.headers = value.toJson() as Map<String,String>;
+                freeCallController.update();
+              },
+            ),
+          )
+      ),
+    );
   }
 
   Widget responsePanel() {
     FreeCallController freeCallController = Get.find();
     return Container(
-        width: double.infinity,
-        height: double.infinity,
+        width: double.maxFinite,
+        height: double.maxFinite,
+        margin:const EdgeInsets.only(top: 20),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-            color: Colors.black,
-            border: Border.all(color: Colors.blueGrey),
-            borderRadius: BorderRadius.circular(10)
+            color: GlobalConstants.mainColor,
+            border: Border.all(color: GlobalConstants.borderColor,width: 2),
+            borderRadius: BorderRadius.circular(GlobalConstants.borderRadius)
         ),
-        child: JsonEditorTheme(
-          themeData: JsonEditorThemeData(
-            darkTheme: JsonTheme(
-                stringStyle:const TextStyle(color: Colors.greenAccent, fontSize: 10)
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Response',style: TextStyle(color: GlobalConstants.textColor),),
+            GetBuilder<FreeCallController>(
+              builder:(controller)=> Expanded(
+                child:controller.isRequesting?
+                    const Center(child: Text('Requesting...',style: TextStyle(color: GlobalConstants.textColor),),)
+                    : Container(
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  margin:const EdgeInsets.only(top: 10),
+                  decoration: BoxDecoration(
+                      color: GlobalConstants.bgColor,
+                      borderRadius: BorderRadius.circular(GlobalConstants.borderRadius)
+                  ),
+                  child: JsonEditorTheme(
+                    themeData: JsonEditorThemeData(
+                      darkTheme: JsonTheme(
+                        bracketStyle:const TextStyle(color: GlobalConstants.textColor),
+                      ),
+                      lightTheme: JsonTheme(
+                        bracketStyle:const TextStyle(color: GlobalConstants.textColor),
+                      ),
+                    ),
+                    child: JsonEditor.string(
+                      jsonString: freeCallController.response == null
+                          ? ""
+                          : freeCallController.response!.bodyString,
+                      enabled: false,
+                      onValueChanged: (value) {},
+                    ),
+                  ),
+                ),
+              ),
             ),
-            lightTheme: JsonTheme(
-                stringStyle:const TextStyle(color: Colors.greenAccent, fontSize: 14,)
-            ),
-          ),
-          child: JsonEditor.string(
-            jsonString: freeCallController.response == null
-                ? ""
-                : freeCallController.response!.bodyString,
-            enabled: false,
-            onValueChanged: (value) {},
-          ),
+          ],
         )
     );
   }

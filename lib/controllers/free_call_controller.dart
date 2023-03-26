@@ -14,6 +14,7 @@ class FreeCallController extends GetxController{
   PageTab pageTab = PageTab.body;
   TextEditingController txtUrl = TextEditingController(text: '');
   Response? response;
+  bool isRequesting = false;
 
   KwiKwiRequest kwiKwiRequest = KwiKwiRequest(
       id: '',
@@ -26,6 +27,8 @@ class FreeCallController extends GetxController{
   );
 
   Future<void> onClickSubmit() async{
+    isRequesting = true;
+    update();
 
     switch(kwiKwiRequest.requestMethod){
       case RequestMethod.get:
@@ -43,7 +46,7 @@ class FreeCallController extends GetxController{
     }
 
 
-
+    isRequesting = false;
     update();
 
   }
