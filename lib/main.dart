@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kwikwi/controllers/global_controller.dart';
 import 'package:kwikwi/controllers/project_controller.dart';
 import 'package:kwikwi/services/mongo_services.dart';
+import 'package:kwikwi/test/json_editor.dart';
 import 'package:kwikwi/test/json_test.dart';
 import 'package:kwikwi/test/test_page.dart';
 import 'package:kwikwi/views/create/add_project_page.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue
       ),
-      home: const HomeMainPage(),
+      home: const JsonEditor(),
     );
   }
 }
