@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_super_scaffold/flutter_super_scaffold.dart';
 import 'package:json_editor/json_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -279,28 +280,28 @@ class FreeCallPage extends StatelessWidget {
   Widget bodyPanel() {
     return GetBuilder<FreeCallController>(
       builder:(freeCallController)=> Container(
-          width: double.maxFinite,
-          height: double.maxFinite,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: JsonEditorTheme(
-            themeData: JsonEditorThemeData(
-              darkTheme: JsonTheme(
-                bracketStyle:const TextStyle(color: GlobalConstants.textColor),
-              ),
-              lightTheme: JsonTheme(
+            width: double.maxFinite,
+            height: double.maxFinite,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: JsonEditorTheme(
+              themeData: JsonEditorThemeData(
+                darkTheme: JsonTheme(
                   bracketStyle:const TextStyle(color: GlobalConstants.textColor),
+                ),
+                lightTheme: JsonTheme(
+                    bracketStyle:const TextStyle(color: GlobalConstants.textColor),
+                ),
               ),
-            ),
-            child: JsonEditor.string(
-              jsonString: "",
-              enabled: true,
-              onValueChanged: (value) {
-                freeCallController.kwiKwiRequest.body = value.toJson();
-                freeCallController.update();
-              },
-            ),
-          )
-      ),
+              child: JsonEditor.string(
+                jsonString:"",
+                enabled: true,
+                onValueChanged: (value) {
+                    freeCallController.kwiKwiRequest.body = jsonDecode(value.toString());
+                    freeCallController.update();
+                },
+              ),
+            )
+        ),
     );
   }
 
