@@ -15,6 +15,7 @@ class NetworkCallServices{
         request.requestUrl,
         headers: Map<String,String>.from(request.requestHeaders),
       );
+      superPrint(response.body);
     }
     catch(e){
       superPrint(e);
@@ -26,13 +27,13 @@ class NetworkCallServices{
 
   Future<Response?> postCall({required KwiKwiRequest request}) async{
     Response? response;
-
     try{
       response = await getClient.post(
         request.requestUrl,
         request.requestBody,
         headers: request.requestHeaders as Map<String,String>,
       );
+      superPrint(response);
     }
     catch(e){
       null;

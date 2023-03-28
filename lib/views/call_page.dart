@@ -19,6 +19,8 @@ class CallPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(CallController());
+    CallController callController = Get.find();
+    callController.initLoad(request: kwiKwiRequest);
     return Scaffold(
       body: Container(
           width: double.infinity,
@@ -79,8 +81,7 @@ class CallPage extends StatelessWidget {
                         value: freeCallController.kwiKwiRequest.requestMethod,
                         onChanged: (value) {
                           if(value!=null){
-                            freeCallController.kwiKwiRequest.requestMethod = value;
-                            freeCallController.update();
+                            freeCallController.onChangeMethod(value);
                           }
                         },
                       )
@@ -131,6 +132,10 @@ class CallPage extends StatelessWidget {
     KwiKwiCollection kwikwiCollection = projectController.allCollections[kwiKwiRequest.collectionId]!;
     return Row(
       children: [
+        IconButton(onPressed: () {
+          Get.back();
+        }, icon: const Icon(Icons.arrow_back_ios_new_rounded,color: GlobalConstants.iconColor,)),
+        const SizedBox(width: 10,),
         Text(kwiKwiProject.name,style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w600,color: GlobalConstants.projectColor),),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -250,6 +255,16 @@ class CallPage extends StatelessWidget {
 
   Widget bodyPanel(Map<String,dynamic> requestBody) {
     CallController freeCallController = Get.find();
+    Widget widget = Container();
+
+    widget = JsonEditor.object(
+      object: requestBody,
+      enabled: true,
+      onValueChanged: (value) async{
+        // freeCallController.kwiKwiRequest.requestBody = jsonDecode(jsonEncode( value.toObject()));
+      },
+    );
+
     return Container(
         width: double.infinity,
         height: double.infinity,
@@ -260,27 +275,7 @@ class CallPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.white30)
         ),
-        child: freeCallController.xCalling?const CupertinoActivityIndicator(color: Colors.white,):JsonEditorTheme(
-          themeData: JsonEditorThemeData(
-            darkTheme: JsonTheme(
-                stringStyle:const TextStyle(color: Colors.redAccent, fontSize: 10)
-            ),
-            lightTheme: JsonTheme(
-              stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 10,),
-              boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
-              keyStyle:const TextStyle(color: Colors.white,fontSize: 10),
-              bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
-              defaultStyle: const TextStyle(color: Colors.grey,fontSize: 10)
-            ),
-          ),
-          child: JsonEditor.object(
-            object: requestBody,
-            enabled: true,
-            onValueChanged: (value) async{
-              freeCallController.kwiKwiRequest.requestBody = jsonDecode(jsonEncode( value.toObject()));
-            },
-          ),
-        )
+        child: freeCallController.xCalling?const CupertinoActivityIndicator(color: Colors.white,):JsonPanel(widget: widget)
     );
   }
 
@@ -339,26 +334,29 @@ class CallPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)
                 ),
                 alignment: Alignment.center,
-                child: xCalling?const CupertinoActivityIndicator(color: Colors.white,):JsonEditorTheme(
-                  themeData: JsonEditorThemeData(
-                    darkTheme: JsonTheme(
-                        stringStyle:const TextStyle(color: Colors.redAccent, fontSize: 10)
-                    ),
-                    lightTheme: JsonTheme(
-                      stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 10,),
-                      boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
-                      keyStyle:const TextStyle(color: Colors.grey,fontSize: 10),
-                      bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
-                    ),
-                  ),
-                  child: JsonEditor.string(
-                    jsonString: freeCallController.response == null
-                        ? ""
-                        : freeCallController.response!.bodyString,
-                    enabled: false,
-                    onValueChanged: (value) {},
-                  ),
-                )
+                child: xCalling
+                    ?const CupertinoActivityIndicator(color: Colors.white,) :
+                    freeCallController.response==null?
+                        Container():
+                    JsonEditorTheme(
+                      themeData: JsonEditorThemeData(
+                        darkTheme: JsonTheme(
+                            stringStyle:const TextStyle(color: Colors.redAccent, fontSize: 10)
+                        ),
+                        lightTheme: JsonTheme(
+                          stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 10,),
+                          boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
+                          keyStyle:const TextStyle(color: Colors.grey,fontSize: 10),
+                          bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
+                        ),
+                      ),
+                      child: JsonEditor.object(
+                        object: freeCallController.response!.body,
+                        enabled: false,
+                        onValueChanged: (value) {},
+                      ),
+                    )
+
             ),
           ),
         ],
@@ -371,5 +369,29 @@ class CallPage extends StatelessWidget {
     return Container();
   }
 
-
 }
+
+class JsonPanel extends StatelessWidget {
+  final Widget widget;
+  const JsonPanel({Key? key,required this.widget}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return JsonEditorTheme(
+      themeData: JsonEditorThemeData(
+        darkTheme: JsonTheme(
+            stringStyle:const TextStyle(color: Colors.redAccent, fontSize: 10)
+        ),
+        lightTheme: JsonTheme(
+            stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 10,),
+            boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
+            keyStyle:const TextStyle(color: Colors.white,fontSize: 10),
+            bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
+            defaultStyle: const TextStyle(color: Colors.grey,fontSize: 10)
+        ),
+      ),
+      child: widget
+    );
+  }
+}
+

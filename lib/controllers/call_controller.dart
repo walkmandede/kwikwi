@@ -73,13 +73,31 @@ class CallController extends GetxController{
     update();
   }
 
+  void onChangeMethod(RequestMethod requestMethod){
+    kwiKwiRequest.requestMethod = requestMethod;
+    switch(kwiKwiRequest.requestMethod){
+      case RequestMethod.get:
+        requestHeaders = {};
+        break;
+      case RequestMethod.post:
+        requestHeaders = {};
+        break;
+      case RequestMethod.put:
+      // TODO: Handle this case.
+        break;
+      case RequestMethod.delete:
+      // TODO: Handle this case.
+        break;
+    }
+    update();
+  }
+
 
 
   Future<void> onClickSubmit() async{
 
     xCalling = true;
     update();
-
     try{
       switch(kwiKwiRequest.requestMethod){
         case RequestMethod.get:

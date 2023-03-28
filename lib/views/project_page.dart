@@ -25,13 +25,13 @@ class ProjectPage extends StatelessWidget {
         child: Row(
           children: [
             projectBar(),
-            Expanded(
-              child: GetBuilder<CallController>(
-                builder: (controller) {
-                  return CallPage(kwiKwiRequest: controller.kwiKwiRequest,);
-                },
-              )
-            )
+            // Expanded(
+            //   child: GetBuilder<CallController>(
+            //     builder: (controller) {
+            //       return CallPage(kwiKwiRequest: controller.kwiKwiRequest,);
+            //     },
+            //   )
+            // )
           ],
         ),
       ),

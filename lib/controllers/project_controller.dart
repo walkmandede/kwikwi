@@ -5,6 +5,7 @@ import 'package:kwikwi/controllers/call_controller.dart';
 import 'package:kwikwi/models/kwikwi_project.dart';
 import 'package:kwikwi/models/kwikwi_request.dart';
 import 'package:kwikwi/services/mongo_services.dart';
+import 'package:kwikwi/views/call_page.dart';
 
 
 class ProjectController extends GetxController{
@@ -90,9 +91,7 @@ class ProjectController extends GetxController{
 
   Future<void> onClickRequest({required KwiKwiRequest kwiKwiRequest}) async{
     currentRequest = kwiKwiRequest;
-    CallController callController = Get.find();
-    callController.initLoad(request: kwiKwiRequest);
-    callController.update();
+    Get.to(()=> CallPage(kwiKwiRequest: kwiKwiRequest));
     update();
   }
 
