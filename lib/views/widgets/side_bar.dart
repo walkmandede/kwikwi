@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_super_scaffold/flutter_super_scaffold.dart';
 import 'package:get/get.dart';
 import 'package:kwikwi/globals/global_constants.dart';
 
@@ -28,6 +29,7 @@ class _HomeSideBarState extends State<HomeSideBar> with SingleTickerProviderStat
   void initState() {
     super.initState();
     sideBarAnimation = AnimationController(vsync: this,duration: const Duration(milliseconds: 300),value: 1);
+    sideBarAnimation.reverse();
   }
 
   @override
@@ -42,6 +44,10 @@ class _HomeSideBarState extends State<HomeSideBar> with SingleTickerProviderStat
 
   void toggleSideBarWidth(){
     sideBarAnimation.isCompleted?sideBarAnimation.reverse():sideBarAnimation.forward();
+  }
+
+  Future<void> onClickAddNewCollection() async{
+
   }
 
   @override
@@ -84,25 +90,6 @@ class _HomeSideBarState extends State<HomeSideBar> with SingleTickerProviderStat
   Widget minBar(){
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            toggleSideBarWidth();
-          },
-          child: Container(
-            width: double.infinity,
-            alignment: Alignment.center,
-            height: Get.height * 0.05,
-            child: Text('Kwi',style: TextStyle(color:GlobalConstants.textColor),)
-          ),
-        ),
-        const Divider(),
-        Expanded(
-            child: minSideBarTabsWidget()
-        ),
-        const Divider(),
-        IconButton(onPressed: () async{
-          await onClickLogOut();
-        }, icon: const Icon(Icons.logout_outlined))
       ],
     );
   }
@@ -110,81 +97,9 @@ class _HomeSideBarState extends State<HomeSideBar> with SingleTickerProviderStat
   Widget maxBar(){
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            toggleSideBarWidth();
-          },
-          child: Container(
-              width: double.infinity,
-              alignment: Alignment.center,
-              height: Get.height * 0.05,
-              child:const Text('Kwi Kwi',style: TextStyle(color: GlobalConstants.textColor),)
-          ),
-        ),
-        Container(
-          color: Colors.grey.withOpacity(0.2),
-          width: double.infinity,
-          height: 1.2,
-        ),
-        Expanded(
-            child: maxSideBarTabsWidget()
-        ),
-        Container(
-          color: Colors.grey.withOpacity(0.2),
-          width: double.infinity,
-          height: 1.2,
-        ),
-        GestureDetector(
-          onTap: () async{
-            await onClickLogOut();
-          },
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 12),
-            width: double.infinity,
-            decoration: const BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.all(Radius.circular(4))
-            ),
-            child: const Text('Log Out',style: TextStyle(color: Colors.white),),
-          ),
-        )
+
       ],
     );
   }
 
-  Widget minSideBarTabsWidget(){
-    return GetBuilder<HomeMainController>(
-      builder: (homeMainController) {
-        return Container(
-          width: double.infinity,
-          height: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [],
-            )
-          ),
-        );
-      },
-    );
-  }
-
-  Widget maxSideBarTabsWidget(){
-    return GetBuilder<HomeMainController>(
-      builder: (homeMainController) {
-        return Container(
-          width: double.infinity,
-          height: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: []
-            ),
-          ),
-        );
-      },
-    );
-  }
 }

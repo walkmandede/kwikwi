@@ -1,0 +1,22 @@
+{
+  "name" : "Fary",
+  "slug" : "FA",
+  "collections" : [
+    {
+      "id" : "1",
+      "name" : "user",
+      "requests" : [
+        {
+          "requestMethod" : "post",
+          "url" : "https://www.google.com/",
+          "headers" : {
+
+          },
+          "body": {
+
+          }
+        }
+      ]
+    }
+  ]
+}

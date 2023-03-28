@@ -1,9 +1,10 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:kwikwi/controllers/home_main_controller.dart';
+import 'package:kwikwi/controllers/project_controller.dart';
 import 'package:kwikwi/globals/global_constants.dart';
-import 'package:kwikwi/views/free_call_page.dart';
+import 'package:kwikwi/views/call_page.dart';
+import 'package:kwikwi/views/project_page.dart';
+import 'package:kwikwi/views/widgets/loading_screen.dart';
 import 'package:kwikwi/views/widgets/side_bar.dart';
 import 'package:get/get.dart';
 
@@ -15,17 +16,39 @@ class HomeMainPage extends StatelessWidget {
     Get.put(HomeMainController());
     return Scaffold(
       backgroundColor: GlobalConstants.bgColor,
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child:  Row(
-          children: const [
-            HomeSideBar(),
-            Expanded(child: FreeCallPage()),
-          ],
-        ),
+      body: GetBuilder<HomeMainController>(
+        builder: (controller) {
+          if(controller.xLoading){
+            return const LoadingScreen();
+          }
+          else{
+            return SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child:  Row(
+                children: [
+                  const HomeSideBar(),
+                  Expanded(
+                    child: bodyWidget(),
+                  ),
+                ],
+              ),
+            );
+          }
+        }
       ),
     );
   }
+
+  Widget bodyWidget(){
+    HomeMainController homeMainController = Get.find();
+    switch(homeMainController.currentTab){
+      case HomePageTab.project:
+        return const ProjectPage();
+    }
+  }
+
 }
+
+
 

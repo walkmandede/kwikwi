@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:kwikwi/views/free_call_page.dart';
+import 'package:get/get.dart';
+import 'package:kwikwi/controllers/global_controller.dart';
+import 'package:kwikwi/controllers/project_controller.dart';
+import 'package:kwikwi/services/mongo_services.dart';
+import 'package:kwikwi/test/json_test.dart';
+import 'package:kwikwi/test/test_page.dart';
+import 'package:kwikwi/views/create/add_project_page.dart';
+import 'package:kwikwi/views/call_page.dart';
 import 'package:kwikwi/views/home_main_page.dart';
 
-void main() {
+import 'controllers/call_controller.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await firstLoading();
   runApp(const MyApp());
+}
+
+Future<void> firstLoading() async{
+  //initiateControllers
+  Get.put(GlobalController());
+  Get.put(ProjectController());
+  await MongoDatabase.connect();
+
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue
       ),
       home: const HomeMainPage(),
     );

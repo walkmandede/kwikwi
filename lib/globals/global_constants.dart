@@ -16,4 +16,23 @@ class GlobalConstants{
   static const double borderWidth = 2;
   static const double fontSize = 14;
 
+  static const Color projectColor = Colors.lightBlueAccent;
+  static const Color collectionColor = Colors.orangeAccent;
+  static const Color requestColor = Colors.purpleAccent;
+
+
+  var jsonTheme1 = JsonEditorThemeData(
+    darkTheme: JsonTheme(
+        stringStyle:const TextStyle(color: Colors.redAccent, fontSize: 10)
+    ),
+    lightTheme: JsonTheme(
+      stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 10,),
+      boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
+      keyStyle:const TextStyle(color: Colors.grey,fontSize: 10),
+      bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
+    ),
+  );
+
+
+
 }

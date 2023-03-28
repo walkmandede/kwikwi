@@ -1,4 +1,6 @@
 
+import '../services/mongo_services.dart';
+
 enum RequestMethod{
   get,
   post,
@@ -8,18 +10,52 @@ enum RequestMethod{
 
 class KwiKwiRequest{
 
-  String id;
+  String requestId;
+  String projectId;
+  String collectionId;
+  String name;
   RequestMethod requestMethod;
-  String url;
-  Map<String,String> headers;
-  Map<String,dynamic> body;
+  String requestUrl;
+  Map<String,dynamic> requestHeaders;
+  Map<String,dynamic> requestBody;
 
   KwiKwiRequest({
-    required this.id,
+    required this.requestId,
+    required this.projectId,
+    required this.collectionId,
+    required this.name,
     required this.requestMethod,
-    required this.url,
-    required this.headers,
-    required this.body
+    required this.requestUrl,
+    required this.requestHeaders,
+    required this.requestBody
   });
+
+  factory KwiKwiRequest.fromDb({required Map data}){
+
+    return KwiKwiRequest(
+      requestId: MongoDatabase().idParser(data),
+      projectId: data['projectId'].toString(),
+      collectionId: data['collectionId'].toString(),
+      name: data['name'].toString(),
+      requestUrl: data['requestUrl'].toString(),
+      requestHeaders: data['requestHeaders'],
+      requestBody: data['requestBody'],
+      requestMethod: RequestMethod.values.where((element) => element.name == data['requestMethod'].toString()).first
+    );
+
+  }
+
+  Map<String,dynamic> convertToMap(){
+
+    return {
+      'name' : name,
+      'projectId' : projectId,
+      'collectionId' : collectionId,
+      'requestUrl' : requestUrl,
+      'requestHeaders' : requestHeaders,
+      'requestBody' : requestBody,
+      'requestMethod' : requestMethod.name
+    };
+  }
 
 }
