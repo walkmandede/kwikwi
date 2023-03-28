@@ -41,6 +41,7 @@ dependencies:
   iconsax:
   flutter_super_scaffold:
   http:
+  mongo_dart:
 
 
 dev_dependencies:

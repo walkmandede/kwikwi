@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_super_scaffold/flutter_super_scaffold.dart';
 import 'package:get/get.dart';
 import 'package:kwikwi/globals/global_constants.dart';
 
@@ -28,6 +29,7 @@ class _HomeSideBarState extends State<HomeSideBar> with SingleTickerProviderStat
   void initState() {
     super.initState();
     sideBarAnimation = AnimationController(vsync: this,duration: const Duration(milliseconds: 300),value: 1);
+    sideBarAnimation.reverse();
   }
 
   @override
