@@ -10,9 +10,9 @@ class GlobalConstants{
   static Color secondaryBorderColor = Colors.white.withOpacity(0.1);
   static const Color iconColor = Color(0xFF97999d);
   static const Color textColor = Color(0xFF97999d);
-  static const Color hightLightColor = Colors.pink;
+  static const Color hightLightColor = Color(0xFFFCA12F);
 
-  static const double borderRadius = 8;
+  static const double borderRadius = 5;
   static const double borderWidth = 2;
   static const double fontSize = 14;
 

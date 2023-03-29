@@ -14,6 +14,8 @@ class HomeMainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(HomeMainController());
+    HomeMainController homeMainController = Get.find();
+    homeMainController.updateScreenSize(MediaQuery.of(context).size);
     return Scaffold(
       backgroundColor: GlobalConstants.bgColor,
       body: GetBuilder<HomeMainController>(
@@ -27,7 +29,7 @@ class HomeMainPage extends StatelessWidget {
               height: double.infinity,
               child:  Row(
                 children: [
-                  const HomeSideBar(),
+                  // const HomeSideBar(),
                   Expanded(
                     child: bodyWidget(),
                   ),

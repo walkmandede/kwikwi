@@ -10,6 +10,9 @@ import 'package:kwikwi/views/call_page.dart';
 
 class ProjectController extends GetxController{
 
+  KwiKwiProject? currentProject;
+  KwiKwiCollection? currentCollection;
+
   KwiKwiRequest currentRequest = KwiKwiRequest(
       requestId: '',
       projectId: '',
@@ -42,6 +45,7 @@ class ProjectController extends GetxController{
     await getAllProjects();
     await getAllCollections();
     await getAllRequests();
+    await setInitialValue();
   }
 
   Future<void> getAllProjects() async{
@@ -63,7 +67,6 @@ class ProjectController extends GetxController{
     allCollections.clear();
     try{
       List<Map> allData = await MongoDatabase().getCollectionAllData(colName: MongoDatabase.colCollections);
-
       for (var value in allData) {
         KwiKwiCollection kwiKwiCollection = KwiKwiCollection.fromDb(data: value);
         allCollections[kwiKwiCollection.collectionId] = kwiKwiCollection;
@@ -89,9 +92,30 @@ class ProjectController extends GetxController{
     }
   }
 
+  Future<void> setInitialValue()async{
+    if(allProjects.isNotEmpty) {
+      currentProject = allProjects[allProjects.keys.first]!;
+      List<KwiKwiCollection> collectionList = allCollections.values.where((collection) => collection.projectId==currentProject!.projectId).toList();
+      if(collectionList.isNotEmpty){
+        currentCollection = collectionList.first;
+      }
+    }
+  }
+
   Future<void> onClickRequest({required KwiKwiRequest kwiKwiRequest}) async{
     currentRequest = kwiKwiRequest;
     Get.to(()=> CallPage(kwiKwiRequest: kwiKwiRequest));
+    update();
+  }
+
+  onClickProject(KwiKwiProject project){
+    currentProject = project;
+    List<KwiKwiCollection> collectionList = allCollections.values.where((collection) => collection.projectId==currentProject!.projectId).toList();
+    if(collectionList.isNotEmpty){
+      currentCollection = collectionList.first;
+    }else{
+      currentCollection=null;
+    }
     update();
   }
 
