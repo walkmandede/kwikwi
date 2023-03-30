@@ -42,6 +42,9 @@ dependencies:
   flutter_super_scaffold:
   http:
   mongo_dart:
+  json_pretty: ^1.0.4
+  highlight_text: ^1.6.0
+  resizable_widget: ^1.0.5
 
 
 dev_dependencies:

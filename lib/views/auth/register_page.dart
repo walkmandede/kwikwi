@@ -2,17 +2,15 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:kwikwi/controllers/auth_controller.dart';
 import 'package:kwikwi/globals/global_constants.dart';
-import 'package:kwikwi/views/auth/register_page.dart';
 
 import '../../models/kwikwi_request.dart';
 import '../call_page.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Get.put(AuthController());
     return Scaffold(
       body: GetBuilder<AuthController>(
         builder: (controller) {
@@ -37,7 +35,7 @@ class LoginPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Welcome to Kwi Kwi',style: TextStyle(color: Colors.white,fontSize: 20),),
+                    const Text('Create An Account',style: TextStyle(color: Colors.white,fontSize: 20),),
                     const SizedBox(height: 20,),
                     const Text('Email',style: TextStyle(color: Colors.grey,fontSize: 15),),
                     Container(
@@ -51,7 +49,7 @@ class LoginPage extends StatelessWidget {
                           )
                       ),
                       child: TextField(
-                        controller: controller.txtLoginEmail,
+                        controller: controller.txtRegisterEmail,
                         style: const TextStyle(color: Colors.white,fontSize: 12),
                         decoration: const InputDecoration(
                           border: InputBorder.none,
@@ -70,8 +68,29 @@ class LoginPage extends StatelessWidget {
                           )
                       ),
                       child: TextField(
-                        controller: controller.txtLoginPassword,
+                        controller: controller.txtRegisterPassword,
                         style: const TextStyle(color: Colors.white,fontSize: 12),
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    const Text('Confirm Password',style: TextStyle(color: Colors.grey,fontSize: 15),),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(
+                              color: GlobalConstants.secondaryBorderColor
+                          )
+                      ),
+                      child: TextField(
+                        controller: controller.txtRegisterConfirmPassword,
+                        style: const TextStyle(color: Colors.white,fontSize: 12),
+                        obscureText: true,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                         ),
@@ -83,35 +102,17 @@ class LoginPage extends StatelessWidget {
                       height: 45,
                       child: ElevatedButton(
                         onPressed: () async {
-
+                          await controller.onClickRegister();
                         },
-                        child: const Text('Submit',style: TextStyle(color: Colors.white),),
+                        child: const Text('Register',style: TextStyle(color: Colors.white),),
                       ),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(onPressed: () {
-                          Get.to((){
-                            return const RegisterPage();
-                          });
-                        }, child: const Text('Create An Account',style: TextStyle(color: Colors.pinkAccent),)),
-                        TextButton(onPressed: () {
-                          Get.to((){
-                            return CallPage(
-                                kwiKwiRequest: KwiKwiRequest(
-                                    collectionId: '',
-                                    requestId: '',
-                                    projectId: '',
-                                    requestUrl: '',
-                                    requestBody: {},
-                                    requestHeaders: {},
-                                    requestMethod: RequestMethod.get,
-                                    name: ''
-                                )
-                            );
-                          });
-                        }, child: const Text('Enter Guest Mode',style: TextStyle(color: Colors.grey),)),
+                          Get.back();
+                        }, child: const Text('Back',style: TextStyle(color: Colors.grey),))
                       ],
                     )
                   ],

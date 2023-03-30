@@ -1,15 +1,17 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_super_scaffold/flutter_super_scaffold.dart';
+import 'package:highlight_text/highlight_text.dart';
 import 'package:json_editor/json_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kwikwi/controllers/call_controller.dart';
 import 'package:kwikwi/controllers/project_controller.dart';
 import 'package:kwikwi/globals/global_constants.dart';
+import 'package:kwikwi/globals/global_functions.dart';
 import 'package:kwikwi/models/kwikwi_project.dart';
-
+import 'package:resizable_widget/resizable_widget.dart';
 import '../models/kwikwi_request.dart';
 
 class CallPage extends StatelessWidget {
@@ -22,23 +24,40 @@ class CallPage extends StatelessWidget {
     CallController callController = Get.find();
     callController.initLoad(request: kwiKwiRequest);
     return Scaffold(
-      body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: GlobalConstants.bgColor,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: GetBuilder<CallController>(
-            builder: (controller) {
-              return controller.xLoading?const Center(
-              ):Column(
-                children: [
-                  topPanel(kwiKwiRequest),
-                  Expanded(child: midPanel(requestHeaders: controller.requestHeaders,requestBody: controller.requestBody)),
-                  // bottomPanel(),
-                ],
-              );
-            },
-          )
+      body: RawKeyboardListener(
+        onKey: (value) async{
+          try{
+            if(value.isKeyPressed(LogicalKeyboardKey.metaLeft) && value.character!.toUpperCase() == "S"){
+              await callController.onClickSave();
+            }
+            else if(value.isKeyPressed(LogicalKeyboardKey.metaLeft) && value.isKeyPressed(LogicalKeyboardKey.enter)){
+              await callController.onClickSubmit();
+            }
+          }
+          catch(e){
+            null;
+          }
+
+        },
+        focusNode: FocusNode(),
+        child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: GlobalConstants.bgColor,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: GetBuilder<CallController>(
+              builder: (controller) {
+                return controller.xLoading?const Center(
+                ):Column(
+                  children: [
+                    topPanel(kwiKwiRequest),
+                    Expanded(child: midPanel()),
+                    // bottomPanel(),
+                  ],
+                );
+              },
+            )
+        ),
       ),
     );
   }
@@ -158,22 +177,8 @@ class CallPage extends StatelessWidget {
     );
   }
 
-  Widget midPanel({required Map<String,dynamic> requestBody,required Map<String,dynamic> requestHeaders}) {
-    CallController freeCallController = Get.find();
-    Widget widget = Container();
-    switch (freeCallController.pageTab) {
-      case PageTab.body:
-        if(freeCallController.kwiKwiRequest.requestId.isNotEmpty){
-          widget = bodyPanel(requestBody);
-        }
-        break;
-      case PageTab.header:
-        if(freeCallController.kwiKwiRequest.requestId.isNotEmpty){
-          widget = headerPanel(requestHeaders);
-        }
-        break;
-    }
-
+  Widget midPanel() {
+    CallController callController = Get.find();
     return Container(
       width: double.maxFinite,
         height: double.maxFinite,
@@ -185,22 +190,91 @@ class CallPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(GlobalConstants.borderRadius)
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-                margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
-                  children: const [
-                    Text('Request',style: TextStyle(color: GlobalConstants.textColor),),
+                  children: [
+                    Row(
+                      children: [
+                        const Text('Request',style: TextStyle(color: GlobalConstants.textColor),),
+                        IconButton(onPressed: () {
+                          callController.xHideRequestPanel = !callController.xHideRequestPanel;
+                          callController.update();
+                        }, icon: Icon(callController.xHideRequestPanel?Icons.expand_more_rounded:Icons.expand_less_rounded,color: Colors.grey,))
+                      ],
+                    ),
+                    const Spacer(),
                   ],
                 )
             ),
-            pageTabPanel(),
-            Expanded(child: widget),
-            Expanded(child: responsePanel())
-            // widget,
+            callController.xHideRequestPanel?Container(): Expanded(
+              child: requestPanel(),
+            ),
+            Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  children: [
+                    Row(
+                      children: [
+                        const Text('Response',style: TextStyle(color: GlobalConstants.textColor),),
+                        IconButton(onPressed: () {
+                          callController.xHideResponsePanel = !callController.xHideResponsePanel;
+                          callController.update();
+                        }, icon: Icon(callController.xHideRequestPanel?Icons.expand_more_rounded:Icons.expand_less_rounded,color: Colors.grey,))
+                      ],
+                    ),
+                    const Spacer(),
+                    const Text('Status Code : ',style: TextStyle(color: GlobalConstants.textColor),),
+                    if(callController.response!=null)Text(callController.response!.statusCode.toString(),style: const TextStyle(color: GlobalConstants.textColor),)
+                  ],
+                )
+            ),
+            callController.xHideResponsePanel?Container():Expanded(
+              child: responsePanel(),
+            ),
           ],
-        )
+        ),
+        // child: ResizableWidget(
+        //   isHorizontalSeparator: true,
+        //   separatorColor: Colors.black,
+        //   separatorSize: 1.2,
+        //   children: [
+        //     requestPanel(),
+        //     responsePanel(),
+        //   ],
+        // ),
+        // child: Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     Expanded(child: responsePanel())
+        //     // widget,
+        //   ],
+        // )
+    );
+  }
+
+  Widget requestPanel(){
+    CallController freeCallController = Get.find();
+    Widget widget = Container();
+    switch (freeCallController.pageTab) {
+      case PageTab.body:
+        widget = bodyPanel();
+        break;
+      case PageTab.header:
+        widget = headerPanel();
+        break;
+    }
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          pageTabPanel(),
+          Expanded(child: freeCallController.xHideRequestPanel?Container():widget),
+        ],
+      ),
     );
   }
 
@@ -253,15 +327,21 @@ class CallPage extends StatelessWidget {
     );
   }
 
-  Widget bodyPanel(Map<String,dynamic> requestBody) {
+  Widget bodyPanel() {
     CallController freeCallController = Get.find();
     Widget widget = Container();
+
+    Map<String,dynamic> requestBody = {};
+
+    freeCallController.kwiKwiRequest.requestBody.forEach((key, value) {
+      requestBody[key] = value;
+    });
 
     widget = JsonEditor.object(
       object: requestBody,
       enabled: true,
       onValueChanged: (value) async{
-        // freeCallController.kwiKwiRequest.requestBody = jsonDecode(jsonEncode( value.toObject()));
+        freeCallController.kwiKwiRequest.requestBody = jsonDecode(jsonEncode( value.toObject()));
       },
     );
 
@@ -275,12 +355,22 @@ class CallPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.white30)
         ),
-        child: freeCallController.xCalling?const CupertinoActivityIndicator(color: Colors.white,):JsonPanel(widget: widget)
+        child: freeCallController.xCalling?const CupertinoActivityIndicator(color: Colors.white,)
+            :
+        JsonEditorTheme(
+            themeData: GlobalConstants().jsonTheme1,
+            child: JsonPanel(widget: widget)
+        )
     );
   }
 
-  Widget headerPanel(Map<String,dynamic> requestHeader) {
+  Widget headerPanel() {
     CallController freeCallController = Get.find();
+    Map<String,dynamic> requestHeaders = {};
+
+    freeCallController.kwiKwiRequest.requestHeaders.forEach((key, value) {
+      requestHeaders[key] = value;
+    });
     return Container(
         width: double.infinity,
         height: double.infinity,
@@ -294,7 +384,7 @@ class CallPage extends StatelessWidget {
         child: freeCallController.xCalling?const CupertinoActivityIndicator(color: Colors.white,):JsonEditorTheme(
           themeData: GlobalConstants().jsonTheme1,
           child: JsonEditor.object(
-            object: requestHeader,
+            object: requestHeaders,
             // object: freeCallController.kwiKwiRequest.headers,
             enabled: true,
             onValueChanged: (value) {
@@ -308,23 +398,26 @@ class CallPage extends StatelessWidget {
   Widget responsePanel() {
     CallController freeCallController = Get.find();
     bool xCalling = freeCallController.xCalling;
+    String responseString = '';
+
+
+    if(freeCallController.response!=null){
+      responseString = freeCallController.response!.bodyString??'';
+      try{
+        responseString = getPrettyJson(rawString: responseString);
+      }
+      catch(e){
+        null;
+      }
+    }
+
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
       child: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              children: [
-                const Text('Response',style: TextStyle(color: GlobalConstants.textColor),),
-                const Spacer(),
-                const Text('Status Code : ',style: TextStyle(color: GlobalConstants.textColor),),
-                if(freeCallController.response!=null)Text(freeCallController.response!.statusCode.toString(),style: const TextStyle(color: GlobalConstants.textColor),)
-              ],
-            )
-          ),
           Expanded(
-            child: Container(
+            child: freeCallController.xHideResponsePanel?Container():Container(
                 width: double.infinity,
                 height: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -334,28 +427,24 @@ class CallPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)
                 ),
                 alignment: Alignment.center,
-                child: xCalling
-                    ?const CupertinoActivityIndicator(color: Colors.white,) :
-                    freeCallController.response==null?
-                        Container():
-                    JsonEditorTheme(
-                      themeData: JsonEditorThemeData(
-                        darkTheme: JsonTheme(
-                            stringStyle:const TextStyle(color: Colors.redAccent, fontSize: 10)
-                        ),
-                        lightTheme: JsonTheme(
-                          stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 10,),
-                          boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
-                          keyStyle:const TextStyle(color: Colors.grey,fontSize: 10),
-                          bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
-                        ),
-                      ),
-                      child: JsonEditor.object(
-                        object: freeCallController.response!.body,
-                        enabled: false,
-                        onValueChanged: (value) {},
-                      ),
-                    )
+                child: xCalling ?
+                const CupertinoActivityIndicator(color: Colors.white,) :
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: TextField(
+                    controller: TextEditingController(text: responseString),
+                    maxLines: null,
+                    readOnly: true,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      height: 1.5
+                    ),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                  ),
+                )
 
             ),
           ),
@@ -394,4 +483,11 @@ class JsonPanel extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
 

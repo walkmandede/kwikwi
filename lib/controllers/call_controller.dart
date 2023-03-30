@@ -23,8 +23,8 @@ class CallController extends GetxController{
   bool xCalling = false;
   bool xLoading = true;
 
-  Map<String,dynamic> requestBody = {};
-  Map<String,dynamic> requestHeaders = {};
+  bool xHideRequestPanel = false;
+  bool xHideResponsePanel = false;
 
   KwiKwiRequest kwiKwiRequest = KwiKwiRequest(
       requestId: '',
@@ -52,18 +52,11 @@ class CallController extends GetxController{
   }
 
   Future<void> initLoad({required KwiKwiRequest request}) async{
-    requestBody.clear();
-    requestHeaders.clear();
+
     try{
       kwiKwiRequest = request;
       txtUrl.text = request.requestUrl;
       response = null;
-      kwiKwiRequest.requestBody.forEach((key, value) {
-        requestBody[key] = value;
-      });
-      kwiKwiRequest.requestHeaders.forEach((key, value) {
-        requestHeaders[key] = value;
-      });
       xLoading = false;
     }
     catch(e){
@@ -77,16 +70,12 @@ class CallController extends GetxController{
     kwiKwiRequest.requestMethod = requestMethod;
     switch(kwiKwiRequest.requestMethod){
       case RequestMethod.get:
-        requestHeaders = {};
         break;
       case RequestMethod.post:
-        requestHeaders = {};
         break;
       case RequestMethod.put:
-      // TODO: Handle this case.
         break;
       case RequestMethod.delete:
-      // TODO: Handle this case.
         break;
     }
     update();
@@ -107,10 +96,10 @@ class CallController extends GetxController{
           response = await NetworkCallServices().postCall(request: kwiKwiRequest);
           break;
         case RequestMethod.put:
-        // TODO: Handle this case.
+          response = await NetworkCallServices().putCall(request: kwiKwiRequest);
           break;
         case RequestMethod.delete:
-        // TODO: Handle this case.
+          response = await NetworkCallServices().deleteCall(request: kwiKwiRequest);
           break;
       }
     }
@@ -119,12 +108,12 @@ class CallController extends GetxController{
     }
 
     xCalling = false;
+
     update();
 
   }
 
   Future<void> onClickSave() async{
-    superPrint(kwiKwiRequest.convertToMap());
     showAlertDialog(content: 'Please wait!',xDismissible: false);
     try{
       await MongoDatabase().updateDocument(

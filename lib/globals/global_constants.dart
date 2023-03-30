@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:highlight_text/highlight_text.dart';
 import 'package:json_editor/json_editor.dart';
 
 class GlobalConstants{
@@ -30,9 +31,32 @@ class GlobalConstants{
       boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
       keyStyle:const TextStyle(color: Colors.grey,fontSize: 10),
       bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
+      numberStyle: const TextStyle(color: Colors.lightBlueAccent,fontSize: 10),
     ),
   );
 
-
+  var wordsStyle1 = {
+    "{" : HighlightedWord(
+      textStyle: const TextStyle(color: Colors.orangeAccent),
+    ),
+    "}" : HighlightedWord(
+      textStyle: const TextStyle(color: Colors.orangeAccent),
+    ),
+    "[" : HighlightedWord(
+      textStyle: const TextStyle(color: Colors.yellowAccent),
+    ),
+    "]" : HighlightedWord(
+      textStyle: const TextStyle(color: Colors.yellowAccent),
+    ),
+    "true" : HighlightedWord(
+      textStyle: const TextStyle(color: Colors.greenAccent),
+    ),
+    "false" : HighlightedWord(
+      textStyle: const TextStyle(color: Colors.redAccent),
+    ),
+    ":" : HighlightedWord(
+      textStyle: const TextStyle(color: Colors.grey),
+    ),
+  };
 
 }

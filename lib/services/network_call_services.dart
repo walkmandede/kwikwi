@@ -10,12 +10,20 @@ class NetworkCallServices{
   Future<Response?> getCall({required KwiKwiRequest request}) async{
     Response? response;
 
+    Map<String,String> header = {
+      'Access-Control-Allow-Origin': '*',
+      'Accept': '*/*',
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    request.requestHeaders.forEach((key, value) {
+      header[key] = value;
+    });
+
     try{
       response = await getClient.get(
         request.requestUrl,
-        headers: Map<String,String>.from(request.requestHeaders),
+        headers: header,
       );
-      superPrint(response.body);
     }
     catch(e){
       superPrint(e);
@@ -31,12 +39,42 @@ class NetworkCallServices{
       response = await getClient.post(
         request.requestUrl,
         request.requestBody,
-        headers: request.requestHeaders as Map<String,String>,
+        headers: Map<String,String>.from(request.requestHeaders),
       );
-      superPrint(response);
     }
     catch(e){
-      null;
+      superPrint(e);
+    }
+    return response;
+  }
+
+  Future<Response?> putCall({required KwiKwiRequest request}) async{
+    Response? response;
+    try{
+      superPrint(request.requestBody,title: request.requestUrl);
+      response = await getClient.put(
+        request.requestUrl,
+        request.requestBody,
+        headers: Map<String,String>.from(request.requestHeaders),
+      );
+    }
+    catch(e){
+      superPrint(e);
+    }
+    return response;
+  }
+
+  Future<Response?> deleteCall({required KwiKwiRequest request}) async{
+    Response? response;
+    try{
+      superPrint(request.requestBody,title: request.requestUrl);
+      response = await getClient.delete(
+        request.requestUrl,
+        headers: Map<String,String>.from(request.requestHeaders),
+      );
+    }
+    catch(e){
+      superPrint(e);
     }
     return response;
   }
