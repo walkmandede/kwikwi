@@ -1,7 +1,6 @@
-
+import 'package:flutter/services.dart';
 import 'package:flutter_super_scaffold/flutter_super_scaffold.dart';
 import 'package:get/get.dart';
-import 'package:kwikwi/controllers/global_controller.dart';
 import 'package:kwikwi/controllers/project_controller.dart';
 
 enum HomePageTab{
@@ -14,6 +13,8 @@ class HomeMainController extends GetxController{
   bool xLoading = true;
   HomePageTab currentTab = HomePageTab.project;
 
+  Size screeenSize = const Size(100, 100);
+
   @override
   void onInit() {
     super.onInit();
@@ -24,6 +25,11 @@ class HomeMainController extends GetxController{
   void onClose() {
     null;
     super.onClose();
+  }
+
+  void updateScreenSize(Size size){
+    screeenSize = size;
+    update();
   }
   
   Future<void> initLoad() async{
