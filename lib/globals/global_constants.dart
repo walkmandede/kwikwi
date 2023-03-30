@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:highlight_text/highlight_text.dart';
 import 'package:json_editor/json_editor.dart';
 
 class GlobalConstants{
+  static const String appVersion = '1';
+
+  static const String spEmail = 'spEmail';
+  static const String spPassword = 'spPassword';
 
   static const Color mainColor = Color(0xFF1e1f23);
   static const Color secondaryColor = Color(0xFF27282f);
@@ -35,28 +38,28 @@ class GlobalConstants{
     ),
   );
 
-  var wordsStyle1 = {
-    "{" : HighlightedWord(
-      textStyle: const TextStyle(color: Colors.orangeAccent),
-    ),
-    "}" : HighlightedWord(
-      textStyle: const TextStyle(color: Colors.orangeAccent),
-    ),
-    "[" : HighlightedWord(
-      textStyle: const TextStyle(color: Colors.yellowAccent),
-    ),
-    "]" : HighlightedWord(
-      textStyle: const TextStyle(color: Colors.yellowAccent),
-    ),
-    "true" : HighlightedWord(
-      textStyle: const TextStyle(color: Colors.greenAccent),
-    ),
-    "false" : HighlightedWord(
-      textStyle: const TextStyle(color: Colors.redAccent),
-    ),
-    ":" : HighlightedWord(
-      textStyle: const TextStyle(color: Colors.grey),
-    ),
-  };
+  // var wordsStyle1 = {
+  //   "{" : HighlightedWord(
+  //     textStyle: const TextStyle(color: Colors.orangeAccent),
+  //   ),
+  //   "}" : HighlightedWord(
+  //     textStyle: const TextStyle(color: Colors.orangeAccent),
+  //   ),
+  //   "[" : HighlightedWord(
+  //     textStyle: const TextStyle(color: Colors.yellowAccent),
+  //   ),
+  //   "]" : HighlightedWord(
+  //     textStyle: const TextStyle(color: Colors.yellowAccent),
+  //   ),
+  //   "true" : HighlightedWord(
+  //     textStyle: const TextStyle(color: Colors.greenAccent),
+  //   ),
+  //   "false" : HighlightedWord(
+  //     textStyle: const TextStyle(color: Colors.redAccent),
+  //   ),
+  //   ":" : HighlightedWord(
+  //     textStyle: const TextStyle(color: Colors.grey),
+  //   ),
+  // };
 
 }

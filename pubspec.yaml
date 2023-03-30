@@ -43,9 +43,7 @@ dependencies:
   http:
   mongo_dart:
   json_pretty: ^1.0.4
-  highlight_text: ^1.6.0
-  resizable_widget: ^1.0.5
-
+  shared_preferences: ^2.0.20
 
 dev_dependencies:
   flutter_test:

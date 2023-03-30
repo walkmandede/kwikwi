@@ -5,7 +5,6 @@ import 'package:kwikwi/controllers/project_controller.dart';
 import 'package:kwikwi/globals/global_constants.dart';
 import 'package:kwikwi/services/mongo_services.dart';
 import 'package:kwikwi/views/auth/login_page.dart';
-import 'package:resizable_widget/resizable_widget.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,31 +40,3 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-class TestPage extends StatelessWidget {
-  const TestPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: ResizableWidget(
-        isHorizontalSeparator: true,
-        separatorColor: Colors.blue,
-        separatorSize: 10,
-        children: [
-          Container(color: Colors.greenAccent),
-          ResizableWidget(
-            children: [
-              Container(color: Colors.greenAccent),
-              Container(color: Colors.yellowAccent),
-              Container(color: Colors.redAccent),
-            ],
-            percentages: const [0.2, 0.5, 0.3],
-          ),
-          Container(color: Colors.redAccent),
-        ],
-      ),
-    );
-  }
-}

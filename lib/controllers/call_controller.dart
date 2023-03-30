@@ -127,6 +127,7 @@ class CallController extends GetxController{
       Get.back();
       showAlertDialog(content: 'Something went wrong!',xDismissible: true);
     }
+
   }
 
   Future<void> onClickDelete() async{

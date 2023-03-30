@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_super_scaffold/flutter_super_scaffold.dart';
-import 'package:highlight_text/highlight_text.dart';
 import 'package:json_editor/json_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,7 +9,7 @@ import 'package:kwikwi/controllers/project_controller.dart';
 import 'package:kwikwi/globals/global_constants.dart';
 import 'package:kwikwi/globals/global_functions.dart';
 import 'package:kwikwi/models/kwikwi_project.dart';
-import 'package:resizable_widget/resizable_widget.dart';
+import 'package:kwikwi/views/home_main_page.dart';
 import '../models/kwikwi_request.dart';
 
 class CallPage extends StatelessWidget {
@@ -65,7 +63,7 @@ class CallPage extends StatelessWidget {
   Widget topPanel(KwiKwiRequest kwiKwiRequest) {
     CallController freeCallController = Get.find();
     return Container(
-      padding:const EdgeInsets.symmetric(horizontal:15,vertical: 15),
+      padding:const EdgeInsets.only(left: 5,right: 5,top: 5,bottom: 14),
       decoration: BoxDecoration(
         color: GlobalConstants.mainColor,
         borderRadius: BorderRadius.circular(GlobalConstants.borderRadius),
@@ -77,6 +75,9 @@ class CallPage extends StatelessWidget {
           if(kwiKwiRequest.requestId.isNotEmpty)const SizedBox(height: 10,),
           Row(
             children: [
+              IconButton(onPressed: () {
+                Get.offAll(()=> const HomeMainPage());
+              }, icon: const Icon(Icons.arrow_back_ios_new_rounded,color: GlobalConstants.iconColor,)),
               //Request Method
               Container(
                 height: 40,
@@ -149,31 +150,30 @@ class CallPage extends StatelessWidget {
     ProjectController projectController = Get.find();
     KwiKwiProject kwiKwiProject = projectController.allProjects[kwiKwiRequest.projectId]!;
     KwiKwiCollection kwikwiCollection = projectController.allCollections[kwiKwiRequest.collectionId]!;
-    return Row(
-      children: [
-        IconButton(onPressed: () {
-          Get.back();
-        }, icon: const Icon(Icons.arrow_back_ios_new_rounded,color: GlobalConstants.iconColor,)),
-        const SizedBox(width: 10,),
-        Text(kwiKwiProject.name,style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w600,color: GlobalConstants.projectColor),),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Icon(Icons.arrow_forward_ios_rounded,color: GlobalConstants.iconColor,size: 12,),
-        ),
-        Text(kwikwiCollection.name,style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w600,color: GlobalConstants.collectionColor),),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Icon(Icons.arrow_forward_ios_rounded,color: GlobalConstants.iconColor,size: 12,),
-        ),
-        Text(kwiKwiRequest.name,style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w600,color: GlobalConstants.requestColor),),
-        const Spacer(),
-        IconButton(onPressed: () async{
-          await freeCallController.onClickDelete();
-        }, icon: const Icon(Icons.delete,color: Colors.redAccent,)),
-        IconButton(onPressed: () async{
-          await freeCallController.onClickSave();
-        }, icon: const Icon(Icons.save_rounded,color: Colors.lightBlueAccent,)),
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Text(kwiKwiProject.name,style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w600,color: GlobalConstants.projectColor),),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(Icons.arrow_forward_ios_rounded,color: GlobalConstants.iconColor,size: 12,),
+          ),
+          Text(kwikwiCollection.name,style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w600,color: GlobalConstants.collectionColor),),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(Icons.arrow_forward_ios_rounded,color: GlobalConstants.iconColor,size: 12,),
+          ),
+          Text(kwiKwiRequest.name,style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w600,color: GlobalConstants.requestColor),),
+          const Spacer(),
+          IconButton(onPressed: () async{
+            await freeCallController.onClickDelete();
+          }, icon: const Icon(Icons.delete,color: Colors.redAccent,)),
+          IconButton(onPressed: () async{
+            await freeCallController.onClickSave();
+          }, icon: const Icon(Icons.save_rounded,color: Colors.lightBlueAccent,)),
+        ],
+      ),
     );
   }
 

@@ -5,7 +5,12 @@ import 'package:kwikwi/controllers/project_controller.dart';
 import 'package:kwikwi/globals/global_constants.dart';
 import 'package:kwikwi/models/kwikwi_project.dart';
 import 'package:kwikwi/models/kwikwi_request.dart';
+import 'package:kwikwi/views/call_page.dart';
 import 'dart:math' as math;
+
+import 'package:kwikwi/views/create/add_collection_page.dart';
+import 'package:kwikwi/views/create/add_request_page.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 class CollectionPage extends StatelessWidget {
   const CollectionPage({Key? key}) : super(key: key);
@@ -80,14 +85,14 @@ class CollectionPage extends StatelessWidget {
         children: [
           Text('Recent requests',style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: GlobalConstants.textColor),),
           const SizedBox(height: 15,),
-          SizedBox(
-            height: Get.width*0.1,
-            child: ListView.builder(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (context,index)=>requestWidget(KwiKwiRequest(requestId: '', projectId: '', collectionId: '', name: 'Test Request', requestMethod: RequestMethod.get, requestUrl: '', requestHeaders: {}, requestBody: {}))),
-          )
+          // SizedBox(
+          //   height: Get.width*0.1,
+          //   child: ListView.builder(
+          //       padding: EdgeInsets.zero,
+          //       scrollDirection: Axis.horizontal,
+          //       itemCount: 5,
+          //       itemBuilder: (context,index)=>requestWidget(KwiKwiRequest(requestId: '', projectId: '', collectionId: '', name: 'Test Request', requestMethod: RequestMethod.get, requestUrl: '', requestHeaders: {}, requestBody: {}))),
+          // )
         ],
       ),
     );
@@ -106,36 +111,54 @@ class CollectionPage extends StatelessWidget {
         methodColor = const Color(0xFF62AFFF);
         break;
       case RequestMethod.delete:
-        methodColor = Color(0xFFF93E3D);
+        methodColor = const Color(0xFFF93E3D);
         break;
     }
-    return Container(
-      width: Get.width*0.1,
-      height: Get.width*0.1,
-      margin:const EdgeInsets.only(right: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: GlobalConstants.mainColor,
-        borderRadius: BorderRadius.circular(GlobalConstants.borderRadius)
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding:const EdgeInsets.all(15),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: GlobalConstants.secondaryColor,
+    return GestureDetector(
+      onTap: () {
+        Get.to((){
+          return CallPage(kwiKwiRequest: request);
+        });
+      },
+      child: Container(
+        margin:const EdgeInsets.symmetric(vertical: 4),
+        width: Get.width,
+        height: 55,
+        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: methodColor.withOpacity(0.1),
+          border: Border.all(color: methodColor),
+          borderRadius: BorderRadius.circular(7)
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: Get.width * 0.075,
+              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                color: methodColor,
+                borderRadius: BorderRadius.circular(4)
+              ),
+              child: Text(request.requestMethod.name.toUpperCase(),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
             ),
-            child: Text(
-              request.requestMethod.name.toUpperCase(),style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: methodColor),
-            ),
-
-          ),
-          const SizedBox(height: 15,),
-          Text(request.name,style: Theme.of(Get.context!).textTheme.bodySmall!,)
-        ],
+            const SizedBox(width: 10,),
+            Expanded(
+              child: TextField(
+                readOnly: true,
+                enabled: false,
+                style: const TextStyle(fontSize: 12,color: Colors.white),
+                controller: TextEditingController(text: request.requestUrl),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  label: Text(request.name,style: const TextStyle(fontSize: 12,color: GlobalConstants.textColor),),
+                  isDense: true,
+                ),
+              )
+            )
+          ],
+        )
       ),
     );
   }
@@ -145,9 +168,7 @@ class CollectionPage extends StatelessWidget {
       builder:(controller){
         List<KwiKwiCollection> collectionList=[];
         if(controller.currentProject!=null) {
-         collectionList = controller.allCollections
-              .values.where((collection) =>
-          collection.projectId == controller.currentProject!.projectId).toList();
+         collectionList = controller.allCollections.values.where((collection) => collection.projectId == controller.currentProject!.projectId).toList();
         }
         return Container(
         padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -155,7 +176,14 @@ class CollectionPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Collections',style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: GlobalConstants.textColor),),
+            Row(
+              children: [
+                Text('Collections',style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: GlobalConstants.textColor),),
+                IconButton(onPressed: () {
+                  Get.to(()=> AddCollectionPage(kwiKwiProject: controller.currentProject!));
+                }, icon: const Icon(Icons.add_box_rounded,color: GlobalConstants.iconColor,),)
+              ],
+            ),
             const SizedBox(height: 15,),
             SizedBox(
                 height: Get.width*0.03,
@@ -172,12 +200,13 @@ class CollectionPage extends StatelessWidget {
 
   Widget eachCollectionWidget(KwiKwiCollection collection){
     const List<Color> colorList = [
-      Color(0xFF48CD8F),
-      Color(0xFFFCA12F),
-      Color(0xFF62AFFF),
-      Color(0xFFF93E3D)
+      // Color(0xFF48CD8F),
+      // Color(0xFFFCA12F),
+      // Color(0xFF62AFFF),
+      // Color(0xFFF93E3D)
     ];
-    Color currentColor = colorList[math.Random().nextInt(colorList.length - 1)];
+    Color currentColor = GlobalConstants.secondaryColor;
+    // Color currentColor = colorList[math.Random().nextInt(colorList.length - 1)];
     return GetBuilder<ProjectController>(
       builder:(controller) {
         bool isClicked = controller.currentCollection!.collectionId==collection.collectionId;
@@ -222,25 +251,41 @@ class CollectionPage extends StatelessWidget {
           requestList = controller.allRequests.values.where((request) => request.collectionId==controller.currentCollection!.collectionId).toList();
         }
 
-        return requestList.isNotEmpty? Container(
+        return Container(
           width: double.maxFinite,
           padding:const EdgeInsets.symmetric(horizontal: 25,vertical: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Requests',style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: GlobalConstants.textColor),),
+              Row(
+                children: [
+                  Text('Requests',style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: GlobalConstants.textColor),),
+                  IconButton(onPressed: () {
+                    Get.to(()=> AddRequestPage(kwiKwiProject: controller.currentProject!, kwiKwiCollection: controller.currentCollection!,));
+                  }, icon: const Icon(Icons.add_box_rounded,color: GlobalConstants.iconColor,),)
+                ],
+              ),
               const SizedBox(height: 15,),
               Expanded(
-                  child:GridView.builder(
-                      gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5,childAspectRatio: 1),
-                      itemCount: requestList.length,
-                      itemBuilder: (context,index)=>requestWidget(requestList[index]))
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
+                  itemCount: requestList.length,
+                  itemBuilder: (context, index) {
+                    KwiKwiRequest kwiKwiRequest = requestList[index];
+                    return requestWidget(kwiKwiRequest);
+                  },
+                ),
               )
-
+              // Expanded(
+              //     child:GridView.builder(
+              //         gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5,childAspectRatio: 1),
+              //         itemCount: requestList.length,
+              //         itemBuilder: (context,index)=>requestWidget(requestList[index]))
+              // )
             ],
 
           ),
-        ):Container();
+        );
       }
     );
   }

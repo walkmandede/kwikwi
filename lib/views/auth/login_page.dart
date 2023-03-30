@@ -71,6 +71,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: TextField(
                         controller: controller.txtLoginPassword,
+                        obscureText: true,
                         style: const TextStyle(color: Colors.white,fontSize: 12),
                         decoration: const InputDecoration(
                           border: InputBorder.none,
@@ -83,9 +84,9 @@ class LoginPage extends StatelessWidget {
                       height: 45,
                       child: ElevatedButton(
                         onPressed: () async {
-
+                          await controller.onClickEnter();
                         },
-                        child: const Text('Submit',style: TextStyle(color: Colors.white),),
+                        child: const Text('Enter',style: TextStyle(color: Colors.white),),
                       ),
                     ),
                     Row(
