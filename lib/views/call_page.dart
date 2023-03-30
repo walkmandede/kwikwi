@@ -10,6 +10,7 @@ import 'package:kwikwi/globals/global_constants.dart';
 import 'package:kwikwi/globals/global_functions.dart';
 import 'package:kwikwi/models/kwikwi_project.dart';
 import 'package:kwikwi/views/home_main_page.dart';
+import 'package:kwikwi/views/widgets/not_full_screen_widget.dart';
 import '../models/kwikwi_request.dart';
 
 class CallPage extends StatelessWidget {
@@ -21,8 +22,9 @@ class CallPage extends StatelessWidget {
     Get.put(CallController());
     CallController callController = Get.find();
     callController.initLoad(request: kwiKwiRequest);
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: RawKeyboardListener(
+      body: screenSize.width<1000?const NotFullScreenWidget():RawKeyboardListener(
         onKey: (value) async{
           try{
             if(value.isKeyPressed(LogicalKeyboardKey.metaLeft) && value.character!.toUpperCase() == "S"){
@@ -364,7 +366,7 @@ class CallPage extends StatelessWidget {
             :
         JsonEditorTheme(
             themeData: GlobalConstants().jsonTheme1,
-            child: JsonPanel(widget: widget)
+            child: widget
         )
     );
   }
@@ -372,10 +374,19 @@ class CallPage extends StatelessWidget {
   Widget headerPanel() {
     CallController freeCallController = Get.find();
     Map<String,dynamic> requestHeaders = {};
+    Widget widget = Container();
 
     freeCallController.kwiKwiRequest.requestHeaders.forEach((key, value) {
       requestHeaders[key] = value;
     });
+
+    widget = JsonEditor.object(
+      object: requestHeaders,
+      enabled: true,
+      onValueChanged: (value) async{
+        freeCallController.kwiKwiRequest.requestBody = jsonDecode(jsonEncode( value.toObject()));
+      },
+    );
     return Container(
         width: double.infinity,
         height: double.infinity,
@@ -388,14 +399,7 @@ class CallPage extends StatelessWidget {
         ),
         child: freeCallController.xCalling?const CupertinoActivityIndicator(color: Colors.white,):JsonEditorTheme(
           themeData: GlobalConstants().jsonTheme1,
-          child: JsonEditor.object(
-            object: requestHeaders,
-            // object: freeCallController.kwiKwiRequest.headers,
-            enabled: true,
-            onValueChanged: (value) {
-              freeCallController.kwiKwiRequest.requestHeaders = value.toJson();
-            },
-          ),
+          child: widget
         )
     );
   }
@@ -465,29 +469,6 @@ class CallPage extends StatelessWidget {
 
 }
 
-class JsonPanel extends StatelessWidget {
-  final Widget widget;
-  const JsonPanel({Key? key,required this.widget}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return JsonEditorTheme(
-      themeData: JsonEditorThemeData(
-        darkTheme: JsonTheme(
-            stringStyle:const TextStyle(color: Colors.redAccent, fontSize: 10)
-        ),
-        lightTheme: JsonTheme(
-            stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 10,),
-            boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
-            keyStyle:const TextStyle(color: Colors.white,fontSize: 10),
-            bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
-            defaultStyle: const TextStyle(color: Colors.grey,fontSize: 10)
-        ),
-      ),
-      child: widget
-    );
-  }
-}
 
 
 

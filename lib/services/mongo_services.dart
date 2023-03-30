@@ -1,6 +1,7 @@
 import 'package:flutter_super_scaffold/flutter_super_scaffold.dart';
+import 'package:kwikwi/views/widgets/unable_to_connect_database_widget.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-
+import 'package:get/get.dart';
 
 class MongoDatabase{
 
@@ -17,8 +18,13 @@ class MongoDatabase{
   }
 
   static Future<void> connect() async{
-    db = await Db.create('mongodb+srv://walkmandede:sio64ati7o@cluster0.qag8tm8.mongodb.net/kwikwi?retryWrites=true&w=majority');
-    await db.open();
+    try{
+      db = await Db.create('mongodb+srv://walkmandede:sio64ati7o@cluster0.qag8tm8.mongodb.net/kwikwi?retryWrites=true&w=majority');
+      await db.open();
+    }
+    catch(e){
+      Get.offAll(()=> UnableToConnectDatabaseWidget(errorMessage: e.toString()));
+    }
   }
 
   DbCollection getCollection({required String colName}){

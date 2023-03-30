@@ -26,15 +26,21 @@ class GlobalConstants{
 
 
   var jsonTheme1 = JsonEditorThemeData(
-    darkTheme: JsonTheme(
-        stringStyle:const TextStyle(color: Colors.redAccent, fontSize: 10)
-    ),
     lightTheme: JsonTheme(
-      stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 10,),
-      boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 10,),
-      keyStyle:const TextStyle(color: Colors.grey,fontSize: 10),
-      bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 10),
-      numberStyle: const TextStyle(color: Colors.lightBlueAccent,fontSize: 10),
+      stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 16,),
+      boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 16,),
+      keyStyle:const TextStyle(color: Colors.grey,fontSize: 16),
+      bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 16),
+      numberStyle: const TextStyle(color: Colors.lightBlueAccent,fontSize: 16),
+      defaultStyle: const TextStyle(color: Colors.lightBlueAccent,fontSize: 16),
+    ),
+    darkTheme: JsonTheme(
+      stringStyle:const TextStyle(color: Colors.lightGreenAccent, fontSize: 16,),
+      boolStyle:const TextStyle(color: Colors.purpleAccent, fontSize: 16,),
+      keyStyle:const TextStyle(color: Colors.grey,fontSize: 16),
+      bracketStyle: const TextStyle(color: Colors.orangeAccent,fontSize: 16),
+      numberStyle: const TextStyle(color: Colors.lightBlueAccent,fontSize: 16),
+      defaultStyle: const TextStyle(color: Colors.lightBlueAccent,fontSize: 16),
     ),
   );
 

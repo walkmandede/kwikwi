@@ -13,6 +13,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(AuthController());
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body: GetBuilder<AuthController>(
         builder: (controller) {
@@ -32,7 +33,7 @@ class LoginPage extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                width: Get.width * 0.35,
+                width: screenSize.width * 0.35,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +80,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      width: Get.width * 0.35,
+                      width: screenSize.width * 0.35,
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       height: 45,
                       child: ElevatedButton(
@@ -96,7 +97,7 @@ class LoginPage extends StatelessWidget {
                           Get.to((){
                             return const RegisterPage();
                           });
-                        }, child: const Text('Create An Account',style: TextStyle(color: Colors.pinkAccent),)),
+                        }, child: const Text('Create An Account',style: TextStyle(color: Colors.pinkAccent,fontSize: 12),)),
                         TextButton(onPressed: () {
                           Get.to((){
                             return CallPage(
@@ -112,7 +113,7 @@ class LoginPage extends StatelessWidget {
                                 )
                             );
                           });
-                        }, child: const Text('Enter Guest Mode',style: TextStyle(color: Colors.grey),)),
+                        }, child: const Text('Enter Guest Mode',style: TextStyle(color: Colors.grey,fontSize: 12),)),
                       ],
                     )
                   ],

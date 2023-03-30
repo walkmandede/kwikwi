@@ -8,6 +8,7 @@ import 'package:kwikwi/globals/global_constants.dart';
 import 'package:kwikwi/models/kwikwi_project.dart';
 import 'package:kwikwi/views/collection_page.dart';
 import 'package:kwikwi/views/create/add_project_page.dart';
+import 'package:kwikwi/views/widgets/not_full_screen_widget.dart';
 
 class ProjectPage extends StatelessWidget {
   const ProjectPage({Key? key}) : super(key: key);
@@ -16,11 +17,12 @@ class ProjectPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(ProjectController());
     Get.put(CallController());
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: Row(
+        child: screenSize.width<1000?const NotFullScreenWidget():Row(
           children: [
             projectBar(),
             const Expanded(child: CollectionPage())
@@ -45,9 +47,6 @@ class ProjectPage extends StatelessWidget {
              width: double.maxFinite,
               height: Get.height*0.085,
               alignment: Alignment.center,
-              // decoration:const BoxDecoration(
-              //   border: Border(bottom:BorderSide(color: GlobalConstants.borderColor,width: GlobalConstants.borderWidth))
-              // ),
               child: Text('Kwikwi Postman',style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: Colors.white,fontWeight:FontWeight.bold),)),
           Container(
             width: double.maxFinite,
@@ -104,7 +103,7 @@ class ProjectPage extends StatelessWidget {
             children: [
               Icon(Iconsax.folder,color:controller.currentProject!.projectId==project.projectId?Colors.white: GlobalConstants.iconColor,),
               const SizedBox(width: 25,),
-              Text(project.name,style:Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:controller.currentProject!.projectId==project.projectId?Colors.white: GlobalConstants.textColor) ,)
+              Text(project.name,maxLines: 1,style:Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:controller.currentProject!.projectId==project.projectId?Colors.white: GlobalConstants.textColor) ,)
             ],
           ),
         ),

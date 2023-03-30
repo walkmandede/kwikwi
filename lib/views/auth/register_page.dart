@@ -11,6 +11,7 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body: GetBuilder<AuthController>(
         builder: (controller) {
@@ -30,7 +31,7 @@ class RegisterPage extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                width: Get.width * 0.35,
+                width: screenSize.width * 0.35,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +98,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      width: Get.width * 0.35,
+                      width: screenSize.width * 0.35,
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       height: 45,
                       child: ElevatedButton(

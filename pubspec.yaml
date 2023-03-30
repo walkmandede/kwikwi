@@ -31,9 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   json_editor: ^0.0.3
   get:
@@ -66,7 +63,26 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/fonts/
+    - assets/icons/
+    - assets/images/
 
+  fonts:
+    - family: SFPro
+      fonts:
+        - asset: assets/fonts/sfpro-regular.ttf
+        - asset: assets/fonts/sfpro-semi-bold.ttf
+          weight: 600
+        - asset: assets/fonts/sfpro-bold.ttf
+          weight: 900
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 900
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
