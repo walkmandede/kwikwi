@@ -76,7 +76,12 @@ class CallPage extends StatelessWidget {
           Row(
             children: [
               IconButton(onPressed: () {
-                Get.offAll(()=> const HomeMainPage());
+                if(kwiKwiRequest.requestId.isNotEmpty){
+                  Get.offAll(()=> const HomeMainPage());
+                }
+                else{
+                  Get.back();
+                }
               }, icon: const Icon(Icons.arrow_back_ios_new_rounded,color: GlobalConstants.iconColor,)),
               //Request Method
               Container(
